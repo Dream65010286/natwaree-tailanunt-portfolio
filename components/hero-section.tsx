@@ -1,5 +1,6 @@
 import { ArrowUpRight, Download, Mail } from 'lucide-react'
 import { GithubIcon, LinkedinIcon } from '@/components/brand-icons'
+import { HeroCarousel } from '@/components/hero-carousel'
 import { metrics } from '@/lib/portfolio-data'
 
 const actions = [
@@ -50,6 +51,8 @@ export function HeroSection() {
           )
         })}
       </div>
+
+      <HeroCarousel />
 
       <div className="mt-16 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3">
         {metrics.map((metric) => (

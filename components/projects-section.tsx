@@ -1,7 +1,13 @@
+'use client'
+
+import { useState } from 'react'
 import { ArrowUpRight, ImageIcon } from 'lucide-react'
-import { projects } from '@/lib/portfolio-data'
+import { projects, type Project } from '@/lib/portfolio-data'
+import { ProjectModal } from '@/components/project-modal'
 
 export function ProjectsSection() {
+  const [active, setActive] = useState<Project | null>(null)
+
   return (
     <section id="projects" className="border-t border-border/60 py-20">
       <div className="mx-auto max-w-6xl px-6">
@@ -19,10 +25,12 @@ export function ProjectsSection() {
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {projects.map((project) => (
-            <a
+            <button
               key={project.title}
-              href="#projects"
-              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5"
+              type="button"
+              onClick={() => setActive(project)}
+              className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card text-left transition-all hover:-translate-y-1 hover:shadow-lg hover:shadow-foreground/5"
+              aria-label={`Open details for ${project.title}`}
             >
               <div className="relative flex aspect-[4/3] items-center justify-center border-b border-border bg-muted/50">
                 <div className="flex flex-col items-center gap-2 text-muted-foreground">
@@ -64,10 +72,12 @@ export function ProjectsSection() {
                   {project.metric}
                 </p>
               </div>
-            </a>
+            </button>
           ))}
         </div>
       </div>
+
+      <ProjectModal project={active} onClose={() => setActive(null)} />
     </section>
   )
 }
