@@ -1,30 +1,60 @@
 'use client'
 
-import { useState } from 'react'
-import { ArrowUpRight, ImageIcon } from 'lucide-react'
-import { projects, type Project } from '@/lib/portfolio-data'
+import { useMemo, useState } from 'react'
+import { ArrowUpRight, ChevronDown, ImageIcon } from 'lucide-react'
+import {
+  categoryFilters,
+  projects,
+  type CategoryGroup,
+  type Project,
+} from '@/lib/portfolio-data'
 import { ProjectModal } from '@/components/project-modal'
 
 export function ProjectsSection() {
   const [active, setActive] = useState<Project | null>(null)
+  const [filter, setFilter] = useState<'all' | CategoryGroup>('all')
+
+  const visibleProjects = useMemo(
+    () => (filter === 'all' ? projects : projects.filter((p) => p.group === filter)),
+    [filter],
+  )
 
   return (
     <section id="projects" className="border-t border-border/60 py-20">
       <div className="mx-auto max-w-6xl px-6">
-        <div className="flex items-end justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm text-muted-foreground">Selected work</p>
             <h2 className="mt-2 font-serif text-3xl tracking-tight text-foreground md:text-4xl">
               Featured Projects
             </h2>
           </div>
-          <span className="hidden text-sm text-muted-foreground sm:block">
-            {projects.length} case studies
-          </span>
+
+          <div className="relative">
+            <label htmlFor="project-filter" className="sr-only">
+              Filter projects by category
+            </label>
+            <select
+              id="project-filter"
+              value={filter}
+              onChange={(e) => setFilter(e.target.value as 'all' | CategoryGroup)}
+              className="w-full cursor-pointer appearance-none rounded-lg border border-border bg-card py-2.5 pl-4 pr-10 text-sm text-foreground transition-colors hover:bg-muted/60 focus:outline-none focus:ring-2 focus:ring-ring sm:w-auto"
+            >
+              {categoryFilters.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
+          </div>
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
+          {visibleProjects.map((project) => (
             <button
               key={project.title}
               type="button"
